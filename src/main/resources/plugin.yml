@@ -1,0 +1,12 @@
+name: ScoreboardExport
+version: ${project.version}
+main: me.lifelessnerd.scoreboardexport.ScoreboardExport
+api-version: 1.18
+authors: [ LifelessNerd ]
+description: Plugin that exports the vanilla scoreboard to a textfile with ease
+commands:
+  exportscoreboard:
+    description: Exports scoreboard.
+    usage: /<command>
+    aliases:
+      - scoreboardexport
