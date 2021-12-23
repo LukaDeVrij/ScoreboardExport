@@ -57,6 +57,7 @@ public class ScoreboardExportCommand implements CommandExecutor {
 //            Objective objective = scoreboard.getObjective("TicksPlayed");
 //            Score score = objective.getScore("DominanceTM");
 //            System.out.println(score.getScore());
+            //
         }
         return true;
     }
