@@ -10,9 +10,17 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.time.Duration;
+import java.time.Period;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class ScoreboardExportCommand implements CommandExecutor {
 
@@ -28,9 +36,11 @@ public class ScoreboardExportCommand implements CommandExecutor {
             HashMap<String, Integer> scoresMap = new HashMap<String, Integer>();
             Set<Objective> objectives = scoreboard.getObjectives();
             Set<String> entries = scoreboard.getEntries();
+
             if (args[0] != null) {
 
                 Objective currentObjective = scoreboard.getObjective(args[0]);
+
 
                 System.out.println(currentObjective.getName());
                 for (String entryName : entries) {
@@ -38,12 +48,26 @@ public class ScoreboardExportCommand implements CommandExecutor {
                         Score entryScore = currentObjective.getScore(entryName);
                         int entryIntScore = entryScore.getScore();
                         scoresMap.put(entryName, entryIntScore);
+
                     }
                     else
                     {
                         sender.sendMessage("The scoreboard does not have any entries.");
                     }
                 }
+                System.out.println(scoresMap);
+                try{
+                    PrintWriter writer = new PrintWriter(currentObjective + "Scores.txt", "UTF-8");
+                    for (Map.Entry<String, Integer> entry : scoresMap.entrySet()){
+                        writer.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                        writer.println("\n");
+                        System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    System.out.println("Error writing file.");
+                }
+
             } else
             {
                 sender.sendMessage("Add an argument please!");
