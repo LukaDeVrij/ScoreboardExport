@@ -16,10 +16,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.Period;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ScoreboardExportCommand implements CommandExecutor {
@@ -28,61 +25,33 @@ public class ScoreboardExportCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("exportscoreboard")){
 
-            System.out.println("command recognised");
             ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-            System.out.println(scoreboardManager.toString());
             Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
-            System.out.println(scoreboard.toString());
-            HashMap<String, Integer> scoresMap = new HashMap<String, Integer>();
             Set<Objective> objectives = scoreboard.getObjectives();
+
+            ArrayList masterScoresList = new ArrayList();
+
             Set<String> entries = scoreboard.getEntries();
 
-            if (args[0] != null) {
+            for (Objective objective : objectives){
 
-                Objective currentObjective = scoreboard.getObjective(args[0]);
-
-
-                System.out.println(currentObjective.getName());
-                for (String entryName : entries) {
-                    if (entryName != null) {
-                        Score entryScore = currentObjective.getScore(entryName);
-                        int entryIntScore = entryScore.getScore();
-                        scoresMap.put(entryName, entryIntScore);
-
-                    }
-                    else
-                    {
-                        sender.sendMessage("The scoreboard does not have any entries.");
-                    }
+                //Get all entries and put their scores in a hashmap with their name as key
+                HashMap<String, Integer> scoreMap = new HashMap<String, Integer>();
+                scoreMap.put(objective.getName(), -1);
+                for (String entry : entries) {
+                    Score score = objective.getScore(entry);
+                    int scoreInt = score.getScore();
+                    scoreMap.put(entry, scoreInt);
                 }
-                System.out.println(scoresMap);
-                try{
-                    PrintWriter writer = new PrintWriter(currentObjective + "Scores.txt", "UTF-8");
-                    for (Map.Entry<String, Integer> entry : scoresMap.entrySet()){
-                        writer.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-                        writer.println("\n");
-                        System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-                    }
-                    writer.close();
-                } catch (IOException e) {
-                    System.out.println("Error writing file.");
-                }
+                masterScoresList.add(scoreMap);
 
-            } else
-            {
-                sender.sendMessage("Add an argument please!");
             }
 
+            String output = masterScoresList.toString();
+            output = output.replaceAll(" ", "");
+            System.out.println(masterScoresList);
+            return true;
+        } else { return false; }
 
-
-
-            System.out.println(scoresMap);
-            //System.out.println(objectives);
-//            Objective objective = scoreboard.getObjective("TicksPlayed");
-//            Score score = objective.getScore("DominanceTM");
-//            System.out.println(score.getScore());
-            //
-        }
-        return true;
     }
 }
