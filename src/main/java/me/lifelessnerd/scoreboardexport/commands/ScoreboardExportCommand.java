@@ -49,7 +49,7 @@ public class ScoreboardExportCommand implements CommandExecutor {
 
             String output = masterScoresList.toString();
             output = output.replaceAll(" ", "");
-            System.out.println(masterScoresList);
+            System.out.println(output);
             return true;
         } else { return false; }
 
